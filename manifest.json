@@ -1,0 +1,12 @@
+{
+  "version": "1.0",
+  "requires": ["pandas"],
+  "dumper": {
+    "data_url": ["https://foodb.ca/public/system/downloads/foodb_2020_04_07_json.zip"],
+    "uncompress": true
+  },
+  "uploader": {
+    "parser": "parser:load_data",
+    "on_duplicates": "ignore"
+  }
+}
