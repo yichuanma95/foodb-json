@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "requires": ["pandas"],
+  "requires": ["pandas", "numpy"],
   "dumper": {
     "data_url": ["https://foodb.ca/public/system/downloads/foodb_2020_04_07_json.zip"],
     "uncompress": true
