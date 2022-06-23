@@ -2,13 +2,14 @@
   "version": "1.0",
   "requires": ["pandas"],
   "__metadata__": {
-        "license_url": "https://creativecommons.org/licenses/by/4.0/",
-        "licence": "CC BY 4.0",
-        "url": "https://foodb.ca/about#cite"
-    },
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "licence": "CC BY 4.0",
+    "url": "https://foodb.ca/about#cite"
+  },
   "dumper": {
     "data_url": ["https://foodb.ca/public/system/downloads/foodb_2020_04_07_json.zip"],
-    "uncompress": true
+    "uncompress": true,
+    "release": "version:get_release"
   },
   "uploader": {
     "parser": "parser:load_data",
