@@ -2,6 +2,8 @@ import math
 import numpy as np
 import pandas as pd
 import json
+import os.path
+
 
 def extract_json(filename, data_dir='foodb_2020_04_07_json'):
     '''
@@ -9,6 +11,7 @@ def extract_json(filename, data_dir='foodb_2020_04_07_json'):
     for each datapoint, one on each line.
 
     :param filename: Name of the file from the FooDB database (as of April 2020)
+    :param data_dir: The directory containing the file
     :return: a Pandas dataframe containing the data in the specified file
     '''
 
@@ -32,6 +35,7 @@ def extract_json(filename, data_dir='foodb_2020_04_07_json'):
             data_list.append(datavals)
 
     return pd.DataFrame(np.array(data_list), columns=columns)
+
 
 def load_data(data_folder):
     content = extract_json('Content.json', data_folder)
