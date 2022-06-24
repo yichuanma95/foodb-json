@@ -2,7 +2,7 @@ import math
 import numpy as np
 import pandas as pd
 import json
-import os.path
+import os
 
 
 def extract_json(filename, data_dir='foodb_2020_04_07_json'):
