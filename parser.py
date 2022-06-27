@@ -16,6 +16,7 @@ def extract_json(filename, data_dir='foodb_2020_04_07_json'):
     '''
 
     infile = os.path.join(data_dir, filename)
+    assert os.path.exists(infile)
 
     # First extract the column names from the file
     f = open(infile, 'r')
