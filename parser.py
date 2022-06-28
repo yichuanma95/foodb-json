@@ -5,7 +5,7 @@ import json
 import os
 
 
-def extract_json(filename, data_dir='foodb_2020_04_07_json'):
+def extract_json(filename, data_dir=''):
     '''
     Read data from a JSON file and put it into a Pandas DataFrame. The JSON file is assumed to have one object
     for each datapoint, one on each line.
@@ -15,6 +15,7 @@ def extract_json(filename, data_dir='foodb_2020_04_07_json'):
     :return: a Pandas dataframe containing the data in the specified file
     '''
 
+    data_dir = os.path.join(data_dir, 'foodb_2020_04_07_json')
     infile = os.path.join(data_dir, filename)
     assert os.path.exists(infile)
 
