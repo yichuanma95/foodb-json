@@ -85,3 +85,18 @@ def load_data(data_folder):
 
     for doc in food_data:
         yield doc
+
+
+def load_food(data_folder):
+    food = extract_json('Food.json', data_folder)
+    food_ids = food['id'].to_list()
+    food_data = []
+    for food_id in food_ids:
+        food_entry = list(food[food['id'] == food_id].to_dict('index').values())[0]
+        food_entry['_id'] = food_entry['public_id']
+        food_entry.pop('public_id', None)
+        food_entry.pop('id', None)
+        food_data.append(food_entry)
+
+    for doc in food_data:
+        yield doc
