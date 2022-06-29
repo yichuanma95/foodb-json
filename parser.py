@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import json
 import os
+from biothings.utils.dataload import dict_convert, dict_sweep
 
 
 def extract_json(filename, data_dir=''):
@@ -96,6 +97,7 @@ def load_food(data_folder):
         food_entry['_id'] = food_entry['public_id']
         food_entry.pop('public_id', None)
         food_entry.pop('id', None)
+        food_entry = dict_sweep(food_entry, vals=[np.nan])
         food_data.append(food_entry)
 
     for doc in food_data:
