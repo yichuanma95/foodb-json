@@ -38,21 +38,39 @@ def extract_json(filename, data_dir=''):
     return pd.DataFrame(np.array(data_list), columns=columns)
 
 
+def extract_contents(data_dir=''):
+    data_dir = os.path.join(data_dir, 'foodb_2020_04_07_json')
+    infile = os.path.join(data_dir, 'Content.json')
+    assert os.path.exists(infile)
+    f = open(infile, 'r')
+    line = f.readline()
+    datapoint = json.loads(line)
+    f.close()
+    columns = list(datapoint.keys())
+
+    data_list = []
+    with open(infile) as f:
+        for line in f:
+            datapoint = json.loads(line)
+            if not datapoint['orig_content'] or datapoint['source_type'] != 'Compound':
+                continue
+            datavals = list(datapoint.values())
+            data_list.append(datavals)
+
+    return pd.DataFrame(np.array(data_list), columns=columns)
+
 def load_data(data_folder):
-    content = extract_json('Content.json', data_folder)
-    content = content.dropna(subset=['orig_content'])
+    content = extract_contents(data_folder)
     compound = extract_json('Compound.json', data_folder)
     food = extract_json('Food.json', data_folder)
     food_ids = food['id'].to_list()
     food_data = []
     for food_id in food_ids:
-        compound_ids = pd.unique(content[(content['food_id'] == food_id) &
-                                         (content['source_type'] == 'Compound')]['source_id'])
+        compound_ids = pd.unique(content[content['food_id'] == food_id]['source_id'])
         compound_list = []
         for cid in compound_ids:
-            contents_dict = content[(content['food_id'] == food_id) & (content['source_id'] == cid) &
-                                    (content['source_type'] == 'Compound')][
-                ['orig_content', 'orig_unit', 'citation']].to_dict()
+            contents_dict = content[(content['food_id'] == food_id) &
+                                    (content['source_id'] == cid)][['orig_content', 'orig_unit', 'citation']].to_dict()
             content_nums = np.array(list(map(lambda x: float(x), contents_dict['orig_content'].values())))
             avg = np.mean(content_nums)
             if math.isclose(avg, 0.0): continue
