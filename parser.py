@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import json
 import os
-from biothings.utils.dataload import dict_convert, dict_sweep
+from biothings.utils.dataload import dict_sweep
 
 
 def extract_json(filename, data_dir=''):
@@ -70,18 +70,23 @@ def load_data(data_folder):
             try:
                 compound_entry = list(compound[compound['id'] == cid].to_dict('index').values())[0]
                 compound_entry.update(extras)
-                compound_entry['_id'] = compound_entry.pop('public_id')
-                compound_entry.pop('public_id', None)
+                compound_entry['_id'] = compound_entry.pop('public_id', None)
                 compound_entry.pop('id', None)
+                compound_entry.pop('moldb_smiles', None)
+                compound_entry.pop('moldb_inchi', None)
+                compound_entry.pop('moldb_mono_mass', None)
+                compound_entry.pop('moldb_iupac', None)
+                compound_entry['inchikey'] = compound_entry.pop('moldb_inchikey', None)
+                compound_entry = dict_sweep(compound_entry, vals=[np.nan, None])
                 compound_list.append(compound_entry)
             except IndexError:
                 continue
 
         food_entry = list(food[food['id'] == food_id].to_dict('index').values())[0]
         food_entry['compounds'] = compound_list
-        food_entry['_id'] = food_entry['public_id']
-        food_entry.pop('public_id', None)
+        food_entry['_id'] = food_entry.pop('public_id', None)
         food_entry.pop('id', None)
+        food_entry = dict_sweep(food_entry, vals=[np.nan, None])
         food_data.append(food_entry)
 
     for doc in food_data:
@@ -94,10 +99,9 @@ def load_food(data_folder):
     food_data = []
     for food_id in food_ids:
         food_entry = list(food[food['id'] == food_id].to_dict('index').values())[0]
-        food_entry['_id'] = food_entry['public_id']
-        food_entry.pop('public_id', None)
+        food_entry['_id'] = food_entry.pop('public_id', None)
         food_entry.pop('id', None)
-        food_entry = dict_sweep(food_entry, vals=[np.nan])
+        food_entry = dict_sweep(food_entry, vals=[np.nan, None])
         food_data.append(food_entry)
 
     for doc in food_data:
