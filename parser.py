@@ -30,9 +30,7 @@ def extract_json(filename, data_dir=''):
     # Then read all of the data and put it into a Pandas DataFrame
     data_list = []
     with open(infile) as f:
-        while True:
-            line = f.readline()
-            if not line: break
+        for line in f:
             datapoint = json.loads(line)
             datavals = list(datapoint.values())
             data_list.append(datavals)
