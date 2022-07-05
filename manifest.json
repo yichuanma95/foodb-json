@@ -7,7 +7,7 @@
     "url": "https://foodb.ca/about#cite"
   },
   "dumper": {
-    "data_url": ["https://foodb.ca/public/system/downloads/foodb_2020_04_07_json.zip"],
+    "data_url": ["https://foodb-food-compound-contents.s3.amazonaws.com/FoodCompound.json.zip"],
     "uncompress": true,
     "release": "version:get_release"
   },

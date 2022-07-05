@@ -4,3 +4,5 @@ foodb_2020_04_07_json
 .DS_Store
 */.DS_Store
 __pycache__
+FoodCompound.json
+FoodCompound.json.zip
