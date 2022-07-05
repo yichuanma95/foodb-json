@@ -66,6 +66,7 @@ def load_data(data_folder):
     with open(infile) as f:
         for line in f:
             doc = json.loads(line)
+            doc = dict_sweep(doc, vals=[np.nan, None])
             docs.append(doc)
 
     for doc in docs:
