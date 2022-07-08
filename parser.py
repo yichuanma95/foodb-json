@@ -41,11 +41,6 @@ def extract_contents(data_dir=''):
                 'citation': datapoint['citation']
             }
             data_table.setdefault((food_id, source_id), []).append(item)
-
-    for key in data_table.keys():
-        raw_contents = data_table[key]
-        data_table[key] = compile_contents(raw_contents)
-
     return data_table
 
 
@@ -83,11 +78,12 @@ def load_data(data_folder):
     food = extract_json('Food.json', data_folder)
 
     for food_id, compound_id in content.keys():
-        if not content[(food_id, compound_id)]: continue
         try:
             compound_item = compound[compound_id].copy()
-            compound_item['orig_contents'] = content[(food_id, compound_id)]['orig_contents']
-            compound_item['reference'] = content[(food_id, compound_id)]['reference']
+            content_match = compile_contents(content[(food_id, compound_id)])
+            if not content_match: continue
+            compound_item['orig_contents'] = content_match['orig_contents']
+            compound_item['reference'] = content_match['reference']
             food_item = food[food_id]
             food_item.setdefault('compounds', []).append(compound_item)
         except KeyError:
