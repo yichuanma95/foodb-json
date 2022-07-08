@@ -73,7 +73,7 @@ def mean(nums):
 
 
 def load_data(data_folder):
-    content = extract_json('Content.json', data_folder)
+    content = extract_contents(data_folder)
     compound = extract_json('Compound.json', data_folder)
     food = extract_json('Food.json', data_folder)
 
