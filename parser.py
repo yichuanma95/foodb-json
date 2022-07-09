@@ -1,11 +1,24 @@
 import math
-from numpy import nan
 import json
 import os
+
+from numpy import nan
+
 from biothings.utils.dataload import dict_sweep
 
 
 def extract_json(filename, data_dir=''):
+    """Extracts data from a specified JSON file downloaded from the FooDB website and
+    located in a specified directory containing the files and returns a dictionary
+    storing the data for easy indexing.
+
+    :param filename: Name of the JSON file to extract data from
+    :type filename: str
+    :param data_dir: Directory that the file is located in, defaults to empty string
+    :type data_dir: str, optional
+    :return: A dictionary with id's as keys and corresponding examples as values
+    :rtype: dict of {int: dict}
+    """
     data_dir = os.path.join(data_dir, 'foodb_2020_04_07_json')
     infile = os.path.join(data_dir, filename)
     assert os.path.exists(infile)
@@ -23,6 +36,19 @@ def extract_json(filename, data_dir=''):
 
 
 def extract_contents(data_dir=''):
+    """Extracts the data from the FooDB file Contents.json without reading
+    the entire file (3.5 GB) at once. This data contains relations between
+    food items and compound items in FooDB. Contents with null values for
+    original content or source type other than 'Compound' are ignored. Only
+    the food id, source id, original content, original unit, and citation
+    are read.
+
+    :param data_dir: Directory that the file is located in, defaults to empty string
+    :type data_dir: str, optional
+    :return: A dictionary with (food id, source id) pairs as keys and a list of
+        contents corresponding to each food-compound relation as values
+    :rtype: dict of {(int, int) tuple: list of dicts}
+    """
     data_dir = os.path.join(data_dir, 'foodb_2020_04_07_json')
     infile = os.path.join(data_dir, 'Content.json')
     assert os.path.exists(infile)
@@ -45,6 +71,19 @@ def extract_contents(data_dir=''):
 
 
 def compile_contents(contents):
+    """Generates a contents object from a list of contents corresponding to a
+    food-compound relation in the FooDB database if average of the content values
+    is nonzero; otherwise returns None for the corresponding relation, which is
+    assumed to not exist in this case.
+
+    :param contents: A list of content objects corresponding to a food-compound
+        relation
+    :type contents: list of dicts
+    :return: A dictionary containing minimum, maximum, and average values of
+        contents along with original unit and reference, or None if average value
+        is 0
+    :rtype: dict or None
+    """
     unit = contents[0]['orig_unit']
     reference = contents[0]['citation']
     content_nums = []
@@ -67,12 +106,27 @@ def compile_contents(contents):
 
 
 def mean(nums):
+    """Calculates the mean (average) of a list of numbers. This does not use NumPy.
+
+    :param nums: a list of numbers to be averaged
+    :type nums: list of numbers, int or float
+    :return: average of nums
+    :rtype: float
+    """
     total = sum(nums)
     n = len(nums)
     return total / n
 
 
 def load_data(data_folder):
+    """Main code of the parser for the FooDB BioThings API. Generates a list of
+    compound objects for each food object and their contents, then yields them.
+
+    :param data_folder: A directory containing the FooDB JSON files. Required.
+    :type data_folder: str
+    :return: an iterator of dictionaries, one for each modified food item
+    :rtype: iterator of dicts
+    """
     content = extract_contents(data_folder)
     compound = extract_json('Compound.json', data_folder)
     food = extract_json('Food.json', data_folder)
@@ -81,7 +135,8 @@ def load_data(data_folder):
         try:
             compound_item = compound[compound_id].copy()
             content_match = compile_contents(content[(food_id, compound_id)])
-            if not content_match: continue
+            if not content_match:
+                continue
             compound_item['orig_contents'] = content_match['orig_contents']
             compound_item['reference'] = content_match['reference']
             food_item = food[food_id]
@@ -90,19 +145,4 @@ def load_data(data_folder):
             continue
 
     for doc in food.values():
-        yield doc
-
-
-def load_food(data_folder):
-    food = extract_json('Food.json', data_folder)
-    food_ids = food['id'].to_list()
-    food_data = []
-    for food_id in food_ids:
-        food_entry = list(food[food['id'] == food_id].to_dict('index').values())[0]
-        food_entry['_id'] = food_entry.pop('public_id', None)
-        food_entry.pop('id', None)
-        food_entry = dict_sweep(food_entry, vals=[nan, None])
-        food_data.append(food_entry)
-
-    for doc in food_data:
         yield doc
