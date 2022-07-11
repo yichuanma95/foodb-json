@@ -2,9 +2,8 @@ import math
 import json
 import os
 
-from numpy import nan
-
 from biothings.utils.dataload import dict_sweep
+from biothings.utils.common import anyfile
 
 
 def extract_json(filename, data_dir=''):
@@ -24,10 +23,10 @@ def extract_json(filename, data_dir=''):
     assert os.path.exists(infile)
 
     data_table = {}
-    with open(infile) as f:
+    with anyfile(infile) as f:
         for line in f:
             datapoint = json.loads(line)
-            datapoint = dict_sweep(datapoint, vals=[nan, None])
+            datapoint = dict_sweep(datapoint, vals=[None])
             public_id = datapoint.pop('public_id', None)
             datapoint['_id'] = public_id
             dbid = datapoint.pop('id', None)
@@ -54,7 +53,7 @@ def extract_contents(data_dir=''):
     assert os.path.exists(infile)
 
     data_table = {}
-    with open(infile) as f:
+    with anyfile(infile) as f:
         for line in f:
             datapoint = json.loads(line)
             if not datapoint['orig_content'] or datapoint['source_type'] != 'Compound':
