@@ -3,7 +3,7 @@ import json
 import os
 
 from biothings.utils.dataload import dict_sweep
-from biothings.utils.common import anyfile
+from biothings.utils.common import open_anyfile
 
 
 def extract_json(filename, data_dir=''):
@@ -22,7 +22,7 @@ def extract_json(filename, data_dir=''):
     assert os.path.exists(zipfile)
 
     data_table = {}
-    with anyfile((zipfile, filename)) as f:
+    with open_anyfile((zipfile, filename)) as f:
         for line in f:
             datapoint = json.loads(line)
             datapoint = dict_sweep(datapoint, vals=[None])
@@ -51,7 +51,7 @@ def extract_contents(data_dir=''):
     assert os.path.exists(zipfile)
 
     data_table = {}
-    with anyfile((zipfile, 'Content.json')) as f:
+    with open_anyfile((zipfile, 'Content.json')) as f:
         for line in f:
             datapoint = json.loads(line)
             if not datapoint['orig_content'] or datapoint['source_type'] != 'Compound':
