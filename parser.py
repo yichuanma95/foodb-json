@@ -20,11 +20,9 @@ def extract_json(filename, data_dir=''):
     """
     zipfile = os.path.join(data_dir, 'foodb_2020_04_07_json.zip')
     assert os.path.exists(zipfile)
-    infile = os.path.join(data_dir, filename)
-    assert os.path.exists(infile)
 
     data_table = {}
-    with anyfile((zipfile, infile)) as f:
+    with anyfile((zipfile, filename)) as f:
         for line in f:
             datapoint = json.loads(line)
             datapoint = dict_sweep(datapoint, vals=[None])
@@ -51,11 +49,9 @@ def extract_contents(data_dir=''):
     """
     zipfile = os.path.join(data_dir, 'foodb_2020_04_07_json.zip')
     assert os.path.exists(zipfile)
-    infile = os.path.join(data_dir, 'Content.json')
-    assert os.path.exists(infile)
 
     data_table = {}
-    with anyfile((zipfile, infile)) as f:
+    with anyfile((zipfile, 'Content.json')) as f:
         for line in f:
             datapoint = json.loads(line)
             if not datapoint['orig_content'] or datapoint['source_type'] != 'Compound':
