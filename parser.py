@@ -18,12 +18,13 @@ def extract_json(filename, data_dir=''):
     :return: A dictionary with id's as keys and corresponding examples as values
     :rtype: dict of {int: dict}
     """
-    data_dir = os.path.join(data_dir, 'foodb_2020_04_07_json')
+    zipfile = os.path.join(data_dir, 'foodb_2020_04_07_json.zip')
+    assert os.path.exists(zipfile)
     infile = os.path.join(data_dir, filename)
     assert os.path.exists(infile)
 
     data_table = {}
-    with anyfile(infile) as f:
+    with anyfile((zipfile, infile)) as f:
         for line in f:
             datapoint = json.loads(line)
             datapoint = dict_sweep(datapoint, vals=[None])
@@ -48,12 +49,13 @@ def extract_contents(data_dir=''):
         contents corresponding to each food-compound relation as values
     :rtype: dict of {(int, int) tuple: list of dicts}
     """
-    data_dir = os.path.join(data_dir, 'foodb_2020_04_07_json')
+    zipfile = os.path.join(data_dir, 'foodb_2020_04_07_json.zip')
+    assert os.path.exists(zipfile)
     infile = os.path.join(data_dir, 'Content.json')
     assert os.path.exists(infile)
 
     data_table = {}
-    with anyfile(infile) as f:
+    with anyfile((zipfile, infile)) as f:
         for line in f:
             datapoint = json.loads(line)
             if not datapoint['orig_content'] or datapoint['source_type'] != 'Compound':
