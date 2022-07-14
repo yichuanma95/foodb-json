@@ -13,6 +13,6 @@
   "uploader": {
     "parser": "parser:load_data",
     "on_duplicates": "ignore",
-    "mapping": "mapping:get_mapping"
+    "mapping": "mapping:get_custom_mapping"
   }
 }

@@ -1,4 +1,4 @@
-def get_mapping(cls):
+def get_custom_mapping(cls):
     mapping = {
         "name": {
             "type": "text"
