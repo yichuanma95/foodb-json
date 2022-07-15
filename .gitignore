@@ -6,3 +6,4 @@ foodb_2020_04_07_json
 __pycache__
 /FoodCompound.json
 /FoodCompound.json.zip
+/.pytest_cache/

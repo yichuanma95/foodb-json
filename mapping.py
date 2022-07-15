@@ -1,7 +1,10 @@
 def get_custom_mapping(cls):
     mapping = {
         "name": {
-            "type": "text"
+            "type": "text",
+            "copy_to": [
+                "all"
+            ]
         },
         "name_scientific": {
             "type": "text"
